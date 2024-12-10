@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Game</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        #chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            gap: 0;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 480px;
+            height: 90vw; /* 9:9 aspect ratio */
+            max-height: 480px;
+            border: 2px solid black;
+        }
+
+        .square {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .white {
+            background-color: #f0d9b5;
+        }
+
+        .black {
+            background-color: #b58863;
+        }
+
+        .piece {
+            font-size: 2em;
+            cursor: pointer;
+        }
+
+        #turnIndicator {
+            font-size: 1.5em;
+            margin: 20px;
+            color: #333;
+        }
+
+        .go-back {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #6c63ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .go-back:hover {
+            background: #554ae2;
+        }
+
+        /* For mobile */
+        @media (max-width: 600px) {
+            .piece {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h1>Chess Game</h1>
+
+<div id="turnIndicator">It's White's Turn</div>
+
+<div id="chessboard"></div>
+
+<button class="go-back" onclick="window.location.href='index.html'">Go Back</button>
+
+<script>
+    // Initialize the chessboard with pieces
+    const board = [
+        ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'], // Black pieces (8th row)
+        ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'], // Black pawns (7th row)
+        ['.', '.', '.', '.', '.', '.', '.', '.'], // Empty squares (6th row)
+        ['.', '.', '.', '.', '.', '.', '.', '.'], // Empty squares (5th row)
+        ['.', '.', '.', '.', '.', '.', '.', '.'], // Empty squares (4th row)
+        ['.', '.', '.', '.', '.', '.', '.', '.'], // Empty squares (3rd row)
+        ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'], // White pawns (2nd row)
+        ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']  // White pieces (1st row)
+    ];
+
+    const pieceSymbols = {
+        'r': '♜', 'n': '♞', 'b': '♝', 'q': '♛', 'k': '♚', 'p': '♟', // Black pieces
+        'R': '♖', 'N': '♘', 'B': '♗', 'Q': '♕', 'K': '♔', 'P': '♙'  // White pieces
+    };
+
+    let selectedSquare = null; // Track the selected square
+    let currentPlayer = 'White'; // Track whose turn it is
+
+    // Function to render the chessboard
+    function renderBoard() {
+        const chessboardDiv = document.getElementById('chessboard');
+        chessboardDiv.innerHTML = ''; // Clear the board before rendering
+
+        for (let row = 0; row < 8; row++) {
+            for (let col = 0; col < 8; col++) {
+                const square = document.createElement('div');
+                square.classList.add('square');
+                // Set the color of the square
+                if ((row + col) % 2 === 0) {
+                    square.classList.add('white');
+                } else {
+                    square.classList.add('black');
+                }
+
+                // Place the piece if any
+                const piece = board[row][col];
+                if (piece !== '.') {
+                    const pieceElement = document.createElement('span');
+                    pieceElement.classList.add('piece');
+                    pieceElement.textContent = pieceSymbols[piece];
+                    pieceElement.addEventListener('click', () => selectPiece(row, col));
+                    square.appendChild(pieceElement);
+                }
+
+                chessboardDiv.appendChild(square);
+            }
+        }
+
+        // Update turn indicator
+        document.getElementById('turnIndicator').textContent = `${currentPlayer}'s Turn`;
+    }
+
+    // Handle piece selection
+    function selectPiece(row, col) {
+        const piece = board[row][col];
+        if (piece === '.') return; // Ignore if no piece is present
+
+        // Allow players to move only their pieces
+        if ((currentPlayer === 'White' && piece.toUpperCase() === piece) ||
+            (currentPlayer === 'Black' && piece.toLowerCase() === piece)) {
+            
+            if (selectedSquare) {
+                const [selectedRow, selectedCol] = selectedSquare;
+                // Move piece
+                board[row][col] = board[selectedRow][selectedCol];
+                board[selectedRow][selectedCol] = '.';
+
+                // Switch turns
+                currentPlayer = currentPlayer === 'White' ? 'Black' : 'White';
+
+                renderBoard(); // Re-render the board
+                selectedSquare = null; // Reset selected square
+            } else {
+                // Select piece
+                selectedSquare = [row, col];
+            }
+        }
+    }
+
+    // Initial render
+    renderBoard();
+</script>
+
+</body>
+</html>
