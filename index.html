@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -84,7 +85,8 @@
         </select>
         <br>
 
-        <input type="text" id="inputValue" placeholder="Enter Value" oninput="convertValue()">
+        <input type="text" id="inputValue" placeholder="Enter Value">
+        <button onclick="convertValue()">Convert</button>
         <p>Octal: <span id="octalOutput"></span></p>
         <p>Decimal: <span id="decimalOutput"></span></p>
         <p>Hexadecimal: <span id="hexOutput"></span></p>
@@ -149,7 +151,7 @@
         'https://media.giphy.com/media/l0HlGv8a11KMZ8FkA/giphy.gif',
         'https://media.giphy.com/media/xT9IgzoKnwFNmISR8I/giphy.gif',
         'https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif'
-    ]
+    ];
 
     function setRandomBackground() {
         const randomGif = gifs[Math.floor(Math.random() * gifs.length)];
